@@ -72,40 +72,23 @@ while continue_reading:
         # Check if authenticated
         if status == MIFAREReader.MI_OK:
 
+            # Get sector from user
+            sec=int(input("Which sector?"))
+            
             # Variable for the data to write
             data = []
 
-            # Fill the data with 0xFF
+            # Fill the data with user input
             for x in range(0,16):
-                data.append(0xFF)
+                data.append(input("What things?"))
 
-            print "Sector 8 looked like this:"
-            # Read block 8
-            MIFAREReader.MFRC522_Read(8)
+            print "Now we fill it with user input"
+            MIFAREReader.MFRC522_Write(sec, data)
             print "\n"
 
-            print "Sector 8 will now be filled with 0xFF:"
-            # Write the data
-            MIFAREReader.MFRC522_Write(8, data)
-            print "\n"
-
-            print "It now looks like this:"
+            print "It is done."
             # Check to see if it was written
-            MIFAREReader.MFRC522_Read(8)
-            print "\n"
-
-            data = []
-            # Fill the data with 0x00
-            for x in range(0,16):
-                data.append(0x00)
-
-            print "Now we fill it with 0x00:"
-            MIFAREReader.MFRC522_Write(8, data)
-            print "\n"
-
-            print "It is now empty:"
-            # Check to see if it was written
-            MIFAREReader.MFRC522_Read(8)
+            MIFAREReader.MFRC522_Read(sec)
             print "\n"
 
             # Stop
