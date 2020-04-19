@@ -28,7 +28,7 @@ import signal
 # Capture SIGINT for cleanup when the script is aborted
 def end_read(signal,frame):
     global continue_reading
-    print "Ctrl+C captured, ending read."
+    print ("Ctrl+C captured, ending read.")
     continue_reading = False
     GPIO.cleanup()
 
@@ -49,7 +49,7 @@ def write():
 
         # If a card is found
         if status == MIFAREReader.MI_OK:
-            print "Card detected"
+            print ("Card detected")
         
         # Get the UID of the card
         (status,uid) = MIFAREReader.MFRC522_Anticoll()
@@ -58,7 +58,7 @@ def write():
         if status == MIFAREReader.MI_OK:
 
             # Print UID
-            print "Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
+            print ("Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3]))
         
             # This is the default key for authentication
             key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
@@ -68,7 +68,7 @@ def write():
 
             # Authenticate
             status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-            print "\n"
+            print ("\n")
 
             # Check if authenticated
             if status == MIFAREReader.MI_OK:
@@ -83,14 +83,14 @@ def write():
                 for x in range(0,16):
                     data.append(input("What things?"))
 
-                print "Now we fill it with user input"
+                print ("Now we fill it with user input")
                 MIFAREReader.MFRC522_Write(sec, data)
-                print "\n"
+                print ("\n")
 
-                print "It is done."
+                print ("It is done.")
                 # Check to see if it was written
                 MIFAREReader.MFRC522_Read(sec)
-                print "\n"
+                print ("\n")
 
                 # Stop
                 MIFAREReader.MFRC522_StopCrypto1()
@@ -98,4 +98,4 @@ def write():
                 # Make sure to stop reading for cards
                 continue_reading = False
             else:
-                print "Authentication error"
+                print ("Authentication error")
