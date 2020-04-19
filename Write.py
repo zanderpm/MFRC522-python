@@ -48,8 +48,8 @@ def write(sec, data):
         (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
 
         # If a card is found
-        if status == MIFAREReader.MI_OK:
-            print ("Card detected")
+        #if status == MIFAREReader.MI_OK:
+        #    print ("Card detected")
         
         # Get the UID of the card
         (status,uid) = MIFAREReader.MFRC522_Anticoll()
@@ -58,7 +58,7 @@ def write(sec, data):
         if status == MIFAREReader.MI_OK:
 
             # Print UID
-            print ("Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3]))
+            #print ("Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3]))
         
             # This is the default key for authentication
             key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
@@ -68,18 +68,13 @@ def write(sec, data):
 
             # Authenticate
             status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-            print ("\n")
 
             # Check if authenticated
             if status == MIFAREReader.MI_OK:
-                print ("Now we fill it with user input")
                 MIFAREReader.MFRC522_Write(sec, data)
-                print ("\n")
 
-                print ("It is done.")
                 # Check to see if it was written
-                MIFAREReader.MFRC522_Read(sec)
-                print ("\n")
+                #MIFAREReader.MFRC522_Read(sec)
 
                 # Stop
                 MIFAREReader.MFRC522_StopCrypto1()
