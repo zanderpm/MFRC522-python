@@ -25,8 +25,6 @@ import RPi.GPIO as GPIO
 import MFRC522
 import signal
 
-continue_reading = True
-
 # Capture SIGINT for cleanup when the script is aborted
 def end_read(signal,frame):
     global continue_reading
@@ -34,67 +32,70 @@ def end_read(signal,frame):
     continue_reading = False
     GPIO.cleanup()
 
-# Hook the SIGINT
-signal.signal(signal.SIGINT, end_read)
+def write():
+    continue_reading = True
 
-# Create an object of the class MFRC522
-MIFAREReader = MFRC522.MFRC522()
+    # Hook the SIGINT
+    signal.signal(signal.SIGINT, end_read)
 
-# This loop keeps checking for chips. If one is near it will get the UID and authenticate
-while continue_reading:
-    
-    # Scan for cards    
-    (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+    # Create an object of the class MFRC522
+    MIFAREReader = MFRC522.MFRC522()
 
-    # If a card is found
-    if status == MIFAREReader.MI_OK:
-        print "Card detected"
-    
-    # Get the UID of the card
-    (status,uid) = MIFAREReader.MFRC522_Anticoll()
-
-    # If we have the UID, continue
-    if status == MIFAREReader.MI_OK:
-
-        # Print UID
-        print "Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
-    
-        # This is the default key for authentication
-        key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+    # This loop keeps checking for chips. If one is near it will get the UID and authenticate
+    while continue_reading:
         
-        # Select the scanned tag
-        MIFAREReader.MFRC522_SelectTag(uid)
+        # Scan for cards    
+        (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
 
-        # Authenticate
-        status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-        print "\n"
+        # If a card is found
+        if status == MIFAREReader.MI_OK:
+            print "Card detected"
+        
+        # Get the UID of the card
+        (status,uid) = MIFAREReader.MFRC522_Anticoll()
 
-        # Check if authenticated
+        # If we have the UID, continue
         if status == MIFAREReader.MI_OK:
 
-            # Get sector from user
-            sec=int(input("Which sector?"))
+            # Print UID
+            print "Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
+        
+            # This is the default key for authentication
+            key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
             
-            # Variable for the data to write
-            data = []
+            # Select the scanned tag
+            MIFAREReader.MFRC522_SelectTag(uid)
 
-            # Fill the data with user input
-            for x in range(0,16):
-                data.append(input("What things?"))
-
-            print "Now we fill it with user input"
-            MIFAREReader.MFRC522_Write(sec, data)
+            # Authenticate
+            status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
             print "\n"
 
-            print "It is done."
-            # Check to see if it was written
-            MIFAREReader.MFRC522_Read(sec)
-            print "\n"
+            # Check if authenticated
+            if status == MIFAREReader.MI_OK:
 
-            # Stop
-            MIFAREReader.MFRC522_StopCrypto1()
+                # Get sector from user
+                sec=int(input("Which sector?"))
+                
+                # Variable for the data to write
+                data = []
 
-            # Make sure to stop reading for cards
-            continue_reading = False
-        else:
-            print "Authentication error"
+                # Fill the data with user input
+                for x in range(0,16):
+                    data.append(input("What things?"))
+
+                print "Now we fill it with user input"
+                MIFAREReader.MFRC522_Write(sec, data)
+                print "\n"
+
+                print "It is done."
+                # Check to see if it was written
+                MIFAREReader.MFRC522_Read(sec)
+                print "\n"
+
+                # Stop
+                MIFAREReader.MFRC522_StopCrypto1()
+
+                # Make sure to stop reading for cards
+                continue_reading = False
+            else:
+                print "Authentication error"
