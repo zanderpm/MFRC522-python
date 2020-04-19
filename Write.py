@@ -32,7 +32,7 @@ def end_read(signal,frame):
     continue_reading = False
     GPIO.cleanup()
 
-def write():
+def write(sec, data):
     continue_reading = True
 
     # Hook the SIGINT
@@ -72,17 +72,6 @@ def write():
 
             # Check if authenticated
             if status == MIFAREReader.MI_OK:
-
-                # Get sector from user
-                sec=int(input("Which sector?"))
-                
-                # Variable for the data to write
-                data = []
-
-                # Fill the data with user input
-                for x in range(0,16):
-                    data.append(input("What things?"))
-
                 print ("Now we fill it with user input")
                 MIFAREReader.MFRC522_Write(sec, data)
                 print ("\n")
