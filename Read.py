@@ -80,7 +80,7 @@ def read(sec):
 
             # Check if authenticated
             if status == MIFAREReader.MI_OK:
-                MIFAREReader.MFRC522_Read(sector)
+                return MIFAREReader.MFRC522_Read(sector)
                 MIFAREReader.MFRC522_StopCrypto1()
                 continue_reading=False
             else:

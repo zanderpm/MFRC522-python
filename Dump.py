@@ -59,6 +59,9 @@ def dump():
         # If we have the UID, continue
         if status == MIFAREReader.MI_OK:
 
+            #End loop
+            continue_reading=False
+            
             # Print UID
             print ("Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3]))
         
@@ -69,6 +72,7 @@ def dump():
             MIFAREReader.MFRC522_SelectTag(uid)
 
             # Dump the data
+            print "call"
             MIFAREReader.MFRC522_DumpClassic1K(key, uid)
 
             # Stop
